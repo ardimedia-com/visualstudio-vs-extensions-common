@@ -1,6 +1,10 @@
 # Ardimedia.VsExtensions.Common
 
+[![NuGet](https://img.shields.io/nuget/v/Ardimedia.VsExtensions.Common.svg)](https://www.nuget.org/packages/Ardimedia.VsExtensions.Common)
+
 Shared infrastructure for Ardimedia Visual Studio extensions built on the [VisualStudio.Extensibility](https://learn.microsoft.com/en-us/visualstudio/extensibility/visualstudio.extensibility/) SDK (out-of-process).
+
+**NuGet:** https://www.nuget.org/packages/Ardimedia.VsExtensions.Common
 
 ## What's Included
 
