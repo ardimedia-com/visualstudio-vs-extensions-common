@@ -16,13 +16,10 @@ jobs:
           dotnet-version: '10.0.x'
 
       - name: Build
-        run: dotnet build src/Ardimedia.VsExtensions.Common/Ardimedia.VsExtensions.Common.csproj -c Release
-
-      - name: Pack
-        run: dotnet pack src/Ardimedia.VsExtensions.Common/Ardimedia.VsExtensions.Common.csproj -c Release --no-build -o ./nupkg
+        run: dotnet build src/Ardimedia.VsExtensions.Common/Ardimedia.VsExtensions.Common.csproj -c Release -p:Version=1.0.${{ github.run_number }}
 
       - name: Push to NuGet
         run: |
-          foreach ($pkg in (Get-ChildItem ./nupkg -Filter *.nupkg)) {
-            dotnet nuget push $pkg.FullName --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
-          }
+          $pkg = Get-ChildItem -Path src -Recurse -Filter *.nupkg | Select-Object -First 1
+          Write-Host "Pushing $($pkg.FullName)"
+          dotnet nuget push $pkg.FullName --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
