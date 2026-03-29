@@ -115,6 +115,13 @@ public abstract class ToolWindowViewModelBase : NotifyPropertyChangedObject, IDi
     protected virtual void OnIsScanningChanged() { }
 
     /// <summary>
+    /// Called when the user clicks the Cancel button. Subclass can cancel additional
+    /// CancellationTokenSources (e.g. for update operations not managed by the base class).
+    /// The base class already cancels <c>_scanCts</c> before calling this method.
+    /// </summary>
+    protected virtual void OnCancelRequested() { }
+
+    /// <summary>
     /// Provides the CancellationToken for the current scan. Use in subclass scan methods.
     /// </summary>
     protected CancellationToken ScanCancellationToken => _scanCts?.Token ?? CancellationToken.None;
@@ -133,10 +140,14 @@ public abstract class ToolWindowViewModelBase : NotifyPropertyChangedObject, IDi
         return this.TryStartScanAsync();
     }
 
-    private Task ExecuteCancelAsync(object? parameter, CancellationToken cancellationToken)
+    private async Task ExecuteCancelAsync(object? parameter, CancellationToken cancellationToken)
     {
-        _scanCts?.Cancel();
-        return Task.CompletedTask;
+        if (_scanCts is not null)
+        {
+            await _scanCts.CancelAsync();
+        }
+
+        this.OnCancelRequested();
     }
 
     private Task TryStartScanAsync()
