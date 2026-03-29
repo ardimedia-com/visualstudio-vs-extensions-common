@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <!-- NuGet package metadata -->
+    <PackageId>Ardimedia.VsExtensions.Common</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Ardimedia</Authors>
+    <Company>Ardimedia</Company>
+    <Product>Ardimedia VS Extensions Common</Product>
+    <Description>Shared infrastructure for Ardimedia Visual Studio extensions. Includes VS theming (dark/light/blue), solution monitoring with debounce, tab management, cancel/analyse patterns, and output channel logging for the VisualStudio.Extensibility SDK.</Description>
+    <Copyright>Copyright (c) 2026 Ardimedia</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/ardimedia-com/visualstudio-vs-extensions-common</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ardimedia-com/visualstudio-vs-extensions-common</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>visual-studio;vsix;extensibility;theming;shared;ardimedia</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <NoWarn>$(NoWarn);VSEXTPREVIEW_OUTPUTWINDOW;VSEXT0004</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Extensibility.Sdk" Version="17.14.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Themes\VsThemeResources.xaml" />
+    <Page Remove="Themes\VsThemeResources.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+</Project>
