@@ -26,6 +26,18 @@ public abstract class ToolWindowViewModelBase : NotifyPropertyChangedObject, IDi
     private CancellationTokenSource? _monitorCts;
     private CancellationTokenSource? _scanCts;
 
+    /// <summary>Delay before the first scan after Initialize() (default: 500ms).</summary>
+    protected int InitialDelayMs { get; init; } = 500;
+
+    /// <summary>Interval between solution fingerprint checks (default: 3000ms).</summary>
+    protected int PollIntervalMs { get; init; } = 3000;
+
+    /// <summary>Interval between debounce stability checks (default: 5000ms).</summary>
+    protected int DebounceIntervalMs { get; init; } = 5000;
+
+    /// <summary>Number of stable readings required before triggering scan (default: 2).</summary>
+    protected int StableReadingsRequired { get; init; } = 2;
+
     protected ToolWindowViewModelBase(VisualStudioExtensibility extensibility)
     {
         this.Extensibility = extensibility;
@@ -81,7 +93,7 @@ public abstract class ToolWindowViewModelBase : NotifyPropertyChangedObject, IDi
         _ = Task.Run(async () =>
         {
             // Small delay to let VS finish loading
-            await Task.Delay(500);
+            await Task.Delay(this.InitialDelayMs);
             await this.TryStartScanAsync();
         });
     }
@@ -201,7 +213,7 @@ public abstract class ToolWindowViewModelBase : NotifyPropertyChangedObject, IDi
             {
                 try
                 {
-                    await Task.Delay(TimeSpan.FromSeconds(3), token).ConfigureAwait(false);
+                    await Task.Delay(this.PollIntervalMs, token).ConfigureAwait(false);
 
                     if (_isScanning)
                     {
@@ -226,9 +238,9 @@ public abstract class ToolWindowViewModelBase : NotifyPropertyChangedObject, IDi
                         int stableCount = 0;
                         string lastFingerprint = "";
 
-                        while (stableCount < 2 && !token.IsCancellationRequested)
+                        while (stableCount < this.StableReadingsRequired && !token.IsCancellationRequested)
                         {
-                            await Task.Delay(TimeSpan.FromSeconds(5), token).ConfigureAwait(false);
+                            await Task.Delay(this.DebounceIntervalMs, token).ConfigureAwait(false);
                             currentFingerprint = await this.GetSolutionFingerprintAsync(token).ConfigureAwait(false);
 
                             if (string.IsNullOrEmpty(currentFingerprint))
@@ -247,7 +259,7 @@ public abstract class ToolWindowViewModelBase : NotifyPropertyChangedObject, IDi
                             }
                         }
 
-                        if (!string.IsNullOrEmpty(currentFingerprint) && stableCount >= 2)
+                        if (!string.IsNullOrEmpty(currentFingerprint) && stableCount >= this.StableReadingsRequired)
                         {
                             await this.TryStartScanAsync();
                         }

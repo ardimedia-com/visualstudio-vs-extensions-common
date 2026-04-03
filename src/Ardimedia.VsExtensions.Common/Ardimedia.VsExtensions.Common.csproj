@@ -7,7 +7,7 @@
 
     <!-- NuGet package metadata -->
     <PackageId>Ardimedia.VsExtensions.Common</PackageId>
-    <Version>1.0.0</Version>
+    <Version>1.1.0</Version>
     <Authors>Ardimedia</Authors>
     <Company>Ardimedia</Company>
     <Product>Ardimedia VS Extensions Common</Product>
