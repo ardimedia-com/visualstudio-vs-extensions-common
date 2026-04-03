@@ -16,7 +16,7 @@ jobs:
           dotnet-version: '10.0.x'
 
       - name: Build
-        run: dotnet build src/Ardimedia.VsExtensions.Common/Ardimedia.VsExtensions.Common.csproj -c Release -p:Version=1.0.${{ github.run_number }}
+        run: dotnet build src/Ardimedia.VsExtensions.Common/Ardimedia.VsExtensions.Common.csproj -c Release
 
       - name: Push to NuGet
         run: |
